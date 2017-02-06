@@ -28,9 +28,9 @@ ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 
 # FIXME: use ARG instead of ENV once DockerHub supports this
-ENV CLONE_TAG=rc4
+ENV CLONE_TAG=idee
 
-RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
+RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
     pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     mkdir build && cd build && \
@@ -41,5 +41,14 @@ ENV PYCAFFE_ROOT $CAFFE_ROOT/python
 ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
+
+WORKDIR ${CAFFE_ROOT}/data/mnist
+RUN ./get_mnist.sh
+WORKDIR ${CAFFE_ROOT}/data/cifar10
+RUN ./get_cifar10.sh
+WORKDIR ${CAFFE_ROOT}/data/ilsvrc12
+RUN ./get_ilsvrc_aux.sh
+ADD http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel ${CAFFE_ROOT}/models/bvlc_reference_caffenet
+ADD http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel ${CAFFE_ROOT}/models/bvlc_googlenet
 
 WORKDIR /workspace
