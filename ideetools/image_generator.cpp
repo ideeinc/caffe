@@ -5,11 +5,11 @@
 #include <cmath>
 using namespace cv;
 
+const int MULTIPLE = 1;  // 何倍するか
 const int OUTPUT_WIDTH  = 224;
 const int OUTPUT_HEIGHT = 224;
 const float ROTATION_RANGE = 180.0; // 回転±
 const float ZOOM_RANGE = 0.2; // ズーム幅(縮小はしない、回転すると黒の余白が増えるため)
-const int MULTIPLE = 28;
 
 
 class Image {
