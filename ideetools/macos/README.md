@@ -39,10 +39,11 @@ The script named `aggregate_dependencies.sh` makes directory `${CAFFE_ROOT}/buil
 
 Xcode project setting:
 
-- All `${CAFFE_ROOT}/build/macos/lib` libraries add to project.
+- All `${CAFFE_ROOT}/build/ideetools/macos/lib` libraries add to project.
 - Add `Accelerate.framework` to project.
-- `HEADER_SEARCH_PATHS` set to `${CAFFE_ROOT}/build/macos/include`.
-- `LIBRARY_SEARCH_PATHS` set to `${CAFFE_ROOT}/build/macos/lib`.
-- `GCC_PREPROCESSOR_DEFINITIONS` set `CPU_ONLY` and `USE_ACCELERATE`.
+- `HEADER_SEARCH_PATHS`: add `${CAFFE_ROOT}/build/ideetools/macos/include`.
+- `LIBRARY_SEARCH_PATHS`: add `${CAFFE_ROOT}/build/ideetools/macos/lib`.
+- `GCC_PREPROCESSOR_DEFINITIONS`: add `CPU_ONLY` and `USE_ACCELERATE`.
+- `LD_RUNPATH_SEARCH_PATHS`: add `@executable_path/../Frameworks`
 - All linked libraries are pushed into `Copy Files` phase that is destination `Frameworks` in `Build Phaeses`.
 
