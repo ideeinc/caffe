@@ -10,7 +10,7 @@ fi
 CAFFE_BUILD="${CAFFE_ROOT}/build"
 MACOS_BUILD="${CAFFE_BUILD}/ideetools/macos"
 
-LIBCAFFE="${CAFFE_BUILD}/lib/libcaffe.so.1.0.0-rc3"
+LIBCAFFE="${CAFFE_BUILD}/lib/libcaffe.1.0.0-rc3.dylib"
 
 update_library() {
     needs_update_files=()
@@ -51,17 +51,10 @@ mkdir -p "${MACOS_BUILD}/"{include,lib}
 cp "${LIBCAFFE}" "${MACOS_BUILD}/lib/"
 update_library "${MACOS_BUILD}/lib/$(basename ${LIBCAFFE})"
 
-# change dyld symbols manually each files.
-cp "${HOMEBREW_PREFIX}/opt/boost/lib/libboost_system-mt.dylib" "${MACOS_BUILD}/lib/libboost_system-mt.dylib"
-chmod +w "${MACOS_BUILD}/lib/libboost_system-mt.dylib"
-install_name_tool -id "@rpath/libboost_system-mt.dylib" "${MACOS_BUILD}/lib/libboost_system-mt.dylib"
-chmod -w "${MACOS_BUILD}/lib/libboost_system-mt.dylib"
-
-
 # copy headers.
 cp -r "${CAFFE_ROOT}/include/caffe" "${MACOS_BUILD}/include/caffe"
 mkdir -p "${MACOS_BUILD}/include/caffe/proto"
-cp "${CAFFE_BUILD}/src/caffe/proto/caffe.pb.h" "${MACOS_BUILD}/include/caffe/proto/caffe.pb.h"
+cp "${CAFFE_BUILD}/include/caffe/proto/caffe.pb.h" "${MACOS_BUILD}/include/caffe/proto/caffe.pb.h"
 
 cp -r "${HOMEBREW_PREFIX}/opt/boost/include/boost" "${MACOS_BUILD}/include/boost"
 cp -r "${HOMEBREW_PREFIX}/opt/gflags/include/gflags" "${MACOS_BUILD}/include/gflags"
