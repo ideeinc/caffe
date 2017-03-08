@@ -33,7 +33,7 @@ update_library() {
             else
                 echo "skip '${libname}' within $(basename ${1})"
             fi
-            install_name_tool -change "${lib}" "@loader_path/../Frameworks/${libname}" "${1}"
+            install_name_tool -change "${lib}" "@rpath/${libname}" "${1}"
         fi
     done
     chmod -w "${1}"
