@@ -1,11 +1,14 @@
 #!/bin/bash
 
 HOMEBREW_PREFIX=$(brew --prefix)
-PROJECT_DIR="$(pwd)"
 
-CAFFE_ROOT=$(dirname $(dirname ${PROJECT_DIR}))
-CAFFE_BUILD="${CAFFE_ROOT}/.build_release"
-MACOS_BUILD="${CAFFE_BUILD}/macos"
+[[ $0 = /* ]] && PROJECT_DIR=$(dirname $0) || PROJECT_DIR=$(dirname "$PWD/${0#./}")
+if [ -z "${CAFFE_ROOT}" ]; then
+    CAFFE_ROOT="$(dirname $(dirname ${PROJECT_DIR}))"
+fi
+
+CAFFE_BUILD="${CAFFE_ROOT}/build"
+MACOS_BUILD="${CAFFE_BUILD}/ideetools/macos"
 
 LIBCAFFE="${CAFFE_BUILD}/lib/libcaffe.so.1.0.0-rc3"
 
@@ -64,4 +67,6 @@ cp -r "${HOMEBREW_PREFIX}/opt/boost/include/boost" "${MACOS_BUILD}/include/boost
 cp -r "${HOMEBREW_PREFIX}/opt/gflags/include/gflags" "${MACOS_BUILD}/include/gflags"
 cp -r "${HOMEBREW_PREFIX}/opt/glog/include/glog" "${MACOS_BUILD}/include/glog"
 cp -r "${HOMEBREW_PREFIX}/opt/protobuf/include/google" "${MACOS_BUILD}/include/google"
+cp -r "${HOMEBREW_PREFIX}/opt/opencv/include/opencv" "${MACOS_BUILD}/include/opencv"
+cp -r "${HOMEBREW_PREFIX}/opt/opencv/include/opencv2" "${MACOS_BUILD}/include/opencv2"
 
