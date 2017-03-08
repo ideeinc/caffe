@@ -3,6 +3,7 @@
 - Use system default Python.framework
 - Use Accelerate.framework (instead of openblas)
 - Use Homebrew
+- Use cmake
 
 ## Install library from homebrew-core
 
@@ -17,13 +18,21 @@ brew tap homebrew/science
 brew install hdf5 opencv
 ```
 
+## Install library for python build
+
+```
+brew install --build-from-source --with-python -v protobuf
+brew install --build-from-source -v boost boost-python
+```
+
 ## Make caffe for cpu
 
 Use this branch's `Makefile` and `Makefile.config`
 
 ```
-make -j$(sysctl -n hw.ncpu) all
-make test
+mkdir ${CAFFE_ROOT}/build && cd $_
+cmake -DCPU_ONLY=1 -DUSE_CUDNN=0 .. 
+make -j$(sysctl -n hw.ncpu)
 make runtest
 ```
 
@@ -35,7 +44,7 @@ cd ${CAFFE_ROOT}/ideetools/macos
 open ./example/CaffeExample.xcodeproj
 ```
 
-The script named `aggregate_dependencies.sh` makes directory `${CAFFE_ROOT}/build/macos` and aggregate dependencies into it.
+The script named `aggregate_dependencies.sh` makes directory `${CAFFE_ROOT}/build/ideetools/macos` and aggregate its dependencies into it.
 
 Xcode project setting:
 

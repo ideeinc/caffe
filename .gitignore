@@ -57,6 +57,7 @@
 
 # User's build configuration
 Makefile.config
+Makefile
 
 # Data and models are either
 # 1. reference, and not casually committed
@@ -81,6 +82,8 @@ distribute/*
 python/caffe/proto/
 cmake_build
 .cmake_build
+cmake_install.cmake
+**/CMakeFiles
 
 # Generated documentation
 docs/_site
