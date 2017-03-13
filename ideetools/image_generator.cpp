@@ -161,8 +161,10 @@ public:
         }
 
         cv::Rect brect = cv::boundingRect(cv::Mat(points));
+        int x = qMax(brect.x-1, 0);
+        int y = qMax(brect.y-1, 0);
         //printf("x:%d ,y:%d  w:%d  h:%d\n", brect.x, brect.y, brect.width,  brect.height);
-        return clip(brect.x+1, brect.y+1, brect.width-2, brect.height-2);
+        return clip(x, y, brect.width+2, brect.height+2);
     }
 
     // 保存
