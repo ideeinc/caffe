@@ -43,13 +43,13 @@ ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
-WORKDIR ${CAFFE_ROOT}/data/mnist
-RUN ./get_mnist.sh
-WORKDIR ${CAFFE_ROOT}/data/cifar10
-RUN ./get_cifar10.sh
-WORKDIR ${CAFFE_ROOT}/data/ilsvrc12
-RUN ./get_ilsvrc_aux.sh
-ADD http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel ${CAFFE_ROOT}/models/bvlc_reference_caffenet
-ADD http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel ${CAFFE_ROOT}/models/bvlc_googlenet
+#WORKDIR ${CAFFE_ROOT}/data/mnist
+#RUN ./get_mnist.sh
+#WORKDIR ${CAFFE_ROOT}/data/cifar10
+#RUN ./get_cifar10.sh
+#WORKDIR ${CAFFE_ROOT}/data/ilsvrc12
+#RUN ./get_ilsvrc_aux.sh
+#ADD http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel ${CAFFE_ROOT}/models/bvlc_reference_caffenet
+#ADD http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel ${CAFFE_ROOT}/models/bvlc_googlenet
 
 WORKDIR /workspace
