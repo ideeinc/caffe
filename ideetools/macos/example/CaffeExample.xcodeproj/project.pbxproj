@@ -14,7 +14,7 @@
 		AE5CBFD01E70CDB60064A530 /* libboost_python-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB01E70CDB60064A530 /* libboost_python-mt.dylib */; };
 		AE5CBFD11E70CDB60064A530 /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB11E70CDB60064A530 /* libboost_system-mt.dylib */; };
 		AE5CBFD21E70CDB60064A530 /* libboost_thread-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB21E70CDB60064A530 /* libboost_thread-mt.dylib */; };
-		AE5CBFD31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib */; };
+		AE5CBFD31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib */; };
 		AE5CBFD41E70CDB60064A530 /* libgflags.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB41E70CDB60064A530 /* libgflags.2.2.dylib */; };
 		AE5CBFD51E70CDB60064A530 /* libglog.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB51E70CDB60064A530 /* libglog.0.dylib */; };
 		AE5CBFD61E70CDB60064A530 /* libHalf.12.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AE5CBFB61E70CDB60064A530 /* libHalf.12.dylib */; };
@@ -46,7 +46,7 @@
 		AE5CBFF01E70CDC90064A530 /* libboost_python-mt.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB01E70CDB60064A530 /* libboost_python-mt.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AE5CBFF11E70CDC90064A530 /* libboost_system-mt.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB11E70CDB60064A530 /* libboost_system-mt.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AE5CBFF21E70CDC90064A530 /* libboost_thread-mt.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB21E70CDB60064A530 /* libboost_thread-mt.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		AE5CBFF31E70CDC90064A530 /* libcaffe.1.0.0-rc3.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		AE5CBFF31E70CDC90064A530 /* libcaffe.1.0.0-rc5.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AE5CBFF41E70CDC90064A530 /* libgflags.2.2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB41E70CDB60064A530 /* libgflags.2.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AE5CBFF51E70CDC90064A530 /* libglog.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB51E70CDB60064A530 /* libglog.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		AE5CBFF61E70CDCA0064A530 /* libHalf.12.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = AE5CBFB61E70CDB60064A530 /* libHalf.12.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -92,7 +92,7 @@
 				AE5CBFF01E70CDC90064A530 /* libboost_python-mt.dylib in CopyFiles */,
 				AE5CBFF11E70CDC90064A530 /* libboost_system-mt.dylib in CopyFiles */,
 				AE5CBFF21E70CDC90064A530 /* libboost_thread-mt.dylib in CopyFiles */,
-				AE5CBFF31E70CDC90064A530 /* libcaffe.1.0.0-rc3.dylib in CopyFiles */,
+				AE5CBFF31E70CDC90064A530 /* libcaffe.1.0.0-rc5.dylib in CopyFiles */,
 				AE5CBFF41E70CDC90064A530 /* libgflags.2.2.dylib in CopyFiles */,
 				AE5CBFF51E70CDC90064A530 /* libglog.0.dylib in CopyFiles */,
 				AE5CBFF61E70CDCA0064A530 /* libHalf.12.dylib in CopyFiles */,
@@ -130,7 +130,7 @@
 		AE5CBFB01E70CDB60064A530 /* libboost_python-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_python-mt.dylib"; path = "../../../../build/ideetools/macos/lib/libboost_python-mt.dylib"; sourceTree = "<group>"; };
 		AE5CBFB11E70CDB60064A530 /* libboost_system-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_system-mt.dylib"; path = "../../../../build/ideetools/macos/lib/libboost_system-mt.dylib"; sourceTree = "<group>"; };
 		AE5CBFB21E70CDB60064A530 /* libboost_thread-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_thread-mt.dylib"; path = "../../../../build/ideetools/macos/lib/libboost_thread-mt.dylib"; sourceTree = "<group>"; };
-		AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcaffe.1.0.0-rc3.dylib"; path = "../../../../build/ideetools/macos/lib/libcaffe.1.0.0-rc3.dylib"; sourceTree = "<group>"; };
+		AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libcaffe.1.0.0-rc5.dylib"; path = "../../../../build/ideetools/macos/lib/libcaffe.1.0.0-rc5.dylib"; sourceTree = "<group>"; };
 		AE5CBFB41E70CDB60064A530 /* libgflags.2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgflags.2.2.dylib; path = ../../../../build/ideetools/macos/lib/libgflags.2.2.dylib; sourceTree = "<group>"; };
 		AE5CBFB51E70CDB60064A530 /* libglog.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglog.0.dylib; path = ../../../../build/ideetools/macos/lib/libglog.0.dylib; sourceTree = "<group>"; };
 		AE5CBFB61E70CDB60064A530 /* libHalf.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.12.dylib; path = ../../../../build/ideetools/macos/lib/libHalf.12.dylib; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 				AE5CBFDD1E70CDB60064A530 /* libIlmImf-2_2.22.dylib in Frameworks */,
 				AE5CBFD21E70CDB60064A530 /* libboost_thread-mt.dylib in Frameworks */,
 				AE5CBFDE1E70CDB60064A530 /* libIlmThread-2_2.12.dylib in Frameworks */,
-				AE5CBFD31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib in Frameworks */,
+				AE5CBFD31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib in Frameworks */,
 				AE5CBFD71E70CDB60064A530 /* libhdf5_cpp.100.dylib in Frameworks */,
 				AE5CBFE01E70CDB60064A530 /* libjpeg.8.dylib in Frameworks */,
 				AE5CBFD11E70CDB60064A530 /* libboost_system-mt.dylib in Frameworks */,
@@ -258,7 +258,7 @@
 				AE5CBFB01E70CDB60064A530 /* libboost_python-mt.dylib */,
 				AE5CBFB11E70CDB60064A530 /* libboost_system-mt.dylib */,
 				AE5CBFB21E70CDB60064A530 /* libboost_thread-mt.dylib */,
-				AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc3.dylib */,
+				AE5CBFB31E70CDB60064A530 /* libcaffe.1.0.0-rc5.dylib */,
 				AE5CBFB41E70CDB60064A530 /* libgflags.2.2.dylib */,
 				AE5CBFB51E70CDB60064A530 /* libglog.0.dylib */,
 				AE5CBFB61E70CDB60064A530 /* libHalf.12.dylib */,

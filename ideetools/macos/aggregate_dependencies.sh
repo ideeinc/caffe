@@ -10,7 +10,7 @@ fi
 CAFFE_BUILD="${CAFFE_ROOT}/build"
 MACOS_BUILD="${CAFFE_BUILD}/ideetools/macos"
 
-LIBCAFFE="${CAFFE_BUILD}/lib/libcaffe.1.0.0-rc3.dylib"
+LIBCAFFE="${CAFFE_BUILD}/lib/libcaffe.1.0.0-rc5.dylib"
 
 update_library() {
     needs_update_files=()
