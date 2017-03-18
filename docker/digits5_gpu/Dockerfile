@@ -26,5 +26,8 @@ RUN pip install -r requirements.txt && \
 VOLUME /data
 VOLUME /jobs
 
+ENV DIGITS_JOBS_DIR=/jobs
+ENV DIGITS_LOGFILE_FILENAME=/jobs/digits.log
+
 EXPOSE 34567
 ENTRYPOINT ["/usr/share/digits/digits-devserver", "-p", "34567"]
