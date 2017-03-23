@@ -56,6 +56,34 @@ SET(CMAKE_CXX_COMPILER C:/MinGW/bin/g++)
 
 If the required version of **Boost** according to the build_win.cmd builder output doesn't match, then the passed value in the ```find_package()``` method in the file ```Dependencies.cmake`` in the folder '''caffe/cmake``` needs to be updated accordiungly.
 
-## Conclusion
+## Compiling Caffe
 
-Now you should be able to build Caffe successfully.
+When the Windows build has been completed successfully, the built project inside the ```build``` folder needs to be compiled, for example by using Microsoft's Visual Studio. The ```build``` folder contains various project files. The fastest way to compile all Caffe project related files at once is to compile the project called ```ALL_BUILD.vcxproj```. After compilation that Caffe is ready to use. 
+
+## Testing Caffe
+
+### Unit Test
+
+In order to verify that everything has been built and compiled correctly, there is another project available to test whether Caffe works properly or not. In order to initiate the test, just compile and run the project called ```runtest.vcxproj```. It will run through more than 1100 tests. If all tests have been passed successfully, then you know that Caffee works properly on your system. If one or more test failed, then please check the output error messages and validate one more time, whether you have setup everything correctly.
+
+### MNIST based test
+
+Another way to test Caffe is to start a program for classifying 50000 images with handwritten digits from MNIST.
+
+At first, switch to the ```caffe```-directory and execute the following shell commands:
+
+```
+sh data/mnist/get_mnist.sh
+sh examples/mnist/create_mnist.sh
+```
+
+If your have encountered an error, it might be because of a wrong path that is set inside the shell script there. In case the project has been compiled with Visual Studio, it creates (depending on your setting) a ```Debug``` or a ```Release``` folder for its compiled binaries. Since the shell scripts are not configured for that, you manually need to update the paths there, otherwise the script stops working and throws an error.<br />
+Instead of using shell-scripts (.sh) you can also use powershell-scripts (.ps1) using the command prompt tool Git Shell for Windows (ot any other tool which understand PowerShell). If an error occures here as well, it might be because of the wrong pathsm, too. Please update them accordingly.
+
+Lastly, in the ```caffe``` directory execute the following command to start Caffe's digit classification:
+
+```
+sh examples/mnist/train_lenet.sh
+```
+
+Now the digit classification program should be running and showing the various about information such as classification accuracy, loss etc.
