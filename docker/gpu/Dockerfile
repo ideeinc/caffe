@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
+FROM nvidia/cuda:8.0-cudnn6-devel-ubuntu16.04
 LABEL maintainer caffe-maint@googlegroups.com
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -28,12 +28,14 @@ ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 
 # FIXME: use ARG instead of ENV once DockerHub supports this
-ENV CLONE_TAG=idee
+# https://github.com/docker/hub-feedback/issues/460
+ENV CLONE_TAG=1.0
 
-RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
+RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
     pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
+    sed -i -e 's/20 21(20) 30 35 50 60 61/60 61/' cmake/Cuda.cmake && \
     mkdir build && cd build && \
     cmake -DUSE_CUDNN=1 -DUSE_NCCL=1 .. && \
     make -j"$(nproc)"
@@ -42,14 +44,5 @@ ENV PYCAFFE_ROOT $CAFFE_ROOT/python
 ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
-
-#WORKDIR ${CAFFE_ROOT}/data/mnist
-#RUN ./get_mnist.sh
-#WORKDIR ${CAFFE_ROOT}/data/cifar10
-#RUN ./get_cifar10.sh
-#WORKDIR ${CAFFE_ROOT}/data/ilsvrc12
-#RUN ./get_ilsvrc_aux.sh
-#ADD http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel ${CAFFE_ROOT}/models/bvlc_reference_caffenet
-#ADD http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel ${CAFFE_ROOT}/models/bvlc_googlenet
 
 WORKDIR /workspace
