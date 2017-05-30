@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 # create_data.sh image-dir xml-dir out-dir
 #
@@ -9,17 +9,16 @@ absolute_path() {
   pwd
 }
 
-BASEDIR=`absolute_path $(dirname $0)`
 IMAGEDIR=`absolute_path $1`
 XMLDIR=`absolute_path $2`
-OUTDIR=`absolute_path $3`
+OUTDIR=$3
 ROOTDIR=`absolute_path $IMAGEDIR/..`
 LABELMAP=${ROOTDIR}/labelmap.txt
 FILELIST=${ROOTDIR}/filelist.txt
 
 #
 create_label() {
-  namelist=`grep '<name>' $XMLDIR/*.xml 2>/dev/null | uniq | sed -e 's/<\/\?name>//g'`
+  namelist=`grep '<name>' $XMLDIR/*.xml 2>/dev/null | awk '{ print$2 }' | sort | uniq | sed -e 's/<\/\?name>//g'`
   [ -z "$namelist" ] && return
 
   echo -e "item {\n  name: \"none_of_the_above\"\n  label: 0\n  display_name: \"background\"\n}" > ${LABELMAP}
@@ -58,6 +57,7 @@ create_list() {
 [ -d $IMAGEDIR -a -d $XMLDIR ] || exit 1
 [ `absolute_path $IMAGEDIR/..` != `absolute_path $XMLDIR/..` ] && exit 1
 [ -d $OUTDIR ] || mkdir -p $OUTDIR
+OUTDIR=`absolute_path $OUTDIR`
 
 create_label
 create_list
@@ -80,4 +80,4 @@ fi
 echo "list file: $FILELIST"
 echo "out dir: $OUTDIR"
 echo
-python $BASEDIR/../../scripts/create_annoset.py --anno-type=$anno_type --label-map-file=${LABELMAP} --min-dim=$min_dim --max-dim=$max_dim --resize-width=$width --resize-height=$height --check-label $extra_cmd "$ROOTDIR" "$FILELIST" "$OUTDIR" "$example_dir"
+python ${CAFFE_ROOT}/scripts/create_annoset.py --anno-type=$anno_type --label-map-file=${LABELMAP} --min-dim=$min_dim --max-dim=$max_dim --resize-width=$width --resize-height=$height --check-label $extra_cmd "$ROOTDIR" "$FILELIST" "$OUTDIR" "$example_dir"
