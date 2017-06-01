@@ -4,16 +4,20 @@
 #
 
 absolute_path() {
-  [ -d "$1" ] || return
-  cd $1
-  pwd
+  if [ -d "$1" ]; then
+    cd "$1"
+    pwd
+  else
+    echo $1
+  fi
 }
 
 IMAGEDIR=`absolute_path $1`
 XMLDIR=`absolute_path $2`
-OUTDIR=$3
+OUTDIR=`absolute_path $3`
 ROOTDIR=`absolute_path $IMAGEDIR/..`
 LABELMAP=${ROOTDIR}/labelmap.txt
+NAMEFILE=${ROOTDIR}/name_size.txt
 FILELIST=${ROOTDIR}/filelist.txt
 
 #
@@ -24,8 +28,8 @@ create_label() {
   echo -e "item {\n  name: \"none_of_the_above\"\n  label: 0\n  display_name: \"background\"\n}" > ${LABELMAP}
   local i=1
   for name in $namelist; do
-  	echo -e "item {\n  name: \"$name\"\n  label: ${i}\n  display_name: \"$name\"\n}" >> ${LABELMAP}
-  	let i=$i+1
+    echo -e "item {\n  name: \"$name\"\n  label: ${i}\n  display_name: \"$name\"\n}" >> ${LABELMAP}
+    let i=$i+1
   done
 }
 
@@ -34,16 +38,14 @@ create_list() {
   rm -f $FILELIST
 
   for img in `ls $ROOTDIR/$(basename $IMAGEDIR)`; do
-  	base=${img%.*}
+    base=${img%.*}
     [ -f "$ROOTDIR/$(basename $XMLDIR)"/${base}.xml ] && echo "`basename $IMAGEDIR`/$img `basename $XMLDIR`/${base}.xml" >> $FILELIST
   done
 
   [ -f $FILELIST ] || return
 
   # Generate image name and size infomation.
-  #if [ ${dataset} == "test" ]; then
-  #  ${BASEDIR}/../../build/tools/get_image_size $ROOTDIR ${listfile} ${BASEDIR}/${dataset}"_name_size.txt"
-  #fi
+  ${CAFFE_ROOT}/build/tools/get_image_size $ROOTDIR ${FILELIST} ${NAMEFILE}
 
   # Shuffle trainval file.
   rand_file=${FILELIST}.rand$$
@@ -59,6 +61,7 @@ create_list() {
 [ -d $OUTDIR ] || mkdir -p $OUTDIR
 OUTDIR=`absolute_path $OUTDIR`
 
+echo "creating labels... "
 create_label
 create_list
 
