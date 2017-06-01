@@ -55,9 +55,10 @@ create_list() {
 }
 
 
-[ $# != 3 ] && exit 1
-[ -d $IMAGEDIR -a -d $XMLDIR ] || exit 1
-[ `absolute_path $IMAGEDIR/..` != `absolute_path $XMLDIR/..` ] && exit 1
+[ $# != 3 ] && echo "invalid args." && exit 1
+[ -z "$CAFFE_ROOT" ] && echo "set CAFFE_ROOT environment value" && exit 1
+[ ! -d $IMAGEDIR -o ! -d $XMLDIR ] && echo "no such directory" && exit 1
+[ `absolute_path $IMAGEDIR/..` != `absolute_path $XMLDIR/..` ] && echo "bad image directory or XML directory" && exit 1
 [ -d $OUTDIR ] || mkdir -p $OUTDIR
 OUTDIR=`absolute_path $OUTDIR`
 
