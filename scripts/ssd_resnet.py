@@ -62,6 +62,7 @@ parser.add_argument('--label_map', type=str, dest='label_map', help='path to lab
 parser.add_argument('--gpus', type=str, dest='gpus', default='0', help='GPUs indexes')
 parser.add_argument('--num_test_image', type=int, dest='num_test_image', help='number of test images')
 parser.add_argument('--batch_size', type=int, dest='batch_size', help='batch size')
+parser.add_argument('--snapshot', type=int, dest='snapshot', help='snapshot iteration')
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
@@ -334,7 +335,7 @@ solver_param = {
     'momentum': 0.9,
     'iter_size': iter_size,
     'max_iter': 60000,
-    'snapshot': 40000,
+    'snapshot': args.snapshot,
     'display': 10,
     'average_loss': 10,
     'type': "SGD",
