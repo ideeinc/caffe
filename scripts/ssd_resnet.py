@@ -11,6 +11,8 @@ import stat
 import subprocess
 import sys
 import argparse
+import time
+from datetime import datetime
 
 # Add extra layers on top of a "base" network (e.g. VGGNet or Inception).
 def AddExtraLayers(net, use_batchnorm=True):
@@ -54,14 +56,14 @@ caffe_root = os.getcwd()
 parser = argparse.ArgumentParser(description='SSD for ResNet.')
 parser.add_argument('train_db', help='path to train db.')
 parser.add_argument('test_db', help='path to test db.')
-parser.add_argument('output_dir', help='path to output directory.')
-parser.add_argument('-n', type=int, dest='num_classes', help='number of classes.')
+parser.add_argument('--job_root', default='/jobs', help='path to job root directory.')
+parser.add_argument('--num_classes', type=int, dest='num_classes', help='number of classes.')
 parser.add_argument('--name_size', type=str, dest='name_size', help='path to name size file.')
 parser.add_argument('--pretrained', type=str, dest='pretrained', help='trained model weights file.')
 parser.add_argument('--label_map', type=str, dest='label_map', help='path to label file.')
 parser.add_argument('--gpus', type=str, dest='gpus', default='0', help='GPUs indexes')
 parser.add_argument('--num_test_image', type=int, dest='num_test_image', help='number of test images')
-parser.add_argument('--batch_size', type=int, dest='batch_size', help='batch size')
+parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, help='batch size')
 parser.add_argument('--snapshot', type=int, dest='snapshot', help='snapshot iteration')
 args = parser.parse_args()
 
@@ -168,7 +170,7 @@ batch_sampler = [
         },
         ]
 train_transform_param = {
-        'mirror': True,
+        'mirror': False,
         'mean_value': [104, 117, 123],
         'resize_param': {
                 'prob': 1,
@@ -202,24 +204,25 @@ test_transform_param = {
 base_lr = 0.00004
 
 # Modify the job name if you want.
-job_name = "SSD_{}".format(resize)
+job_name = "SSD{}".format(resize)
 # The name of the model. Modify it if you want.
 model_name = "ResNet_{}".format(job_name)
 
-# Directory which stores the model .prototxt file.
-save_dir = "jobs/SSD_ResNet/models/{}".format(job_name)
-# Directory which stores the snapshot of models.
-snapshot_dir = "jobs/SSD_ResNet/{}".format(job_name)
 # Directory which stores the job script and log file.
-job_dir = "jobs/SSD_ResNet/{}".format(job_name)
+epoch_s = int(time.mktime(datetime.now().timetuple()))
+job_dir = "{}/{}/{}".format(args.job_root, epoch_s, job_name)
+# Directory which stores the model .prototxt file.
+#save_dir = "jobs/SSD_ResNet/models/{}".format(job_name)
+# Directory which stores the snapshot of models.
+snapshot_dir = job_dir
 # Directory which stores the detection results.
-output_result_dir = "jobs/SSD_ResNet/{}/Main".format(job_name)
+output_result_dir = "{}/test_results/".format(job_dir)
 
 # model definition files.
-train_net_file = "{}/train.prototxt".format(save_dir)
-test_net_file = "{}/test.prototxt".format(save_dir)
-deploy_net_file = "{}/deploy.prototxt".format(save_dir)
-solver_file = "{}/solver.prototxt".format(save_dir)
+train_net_file = "{}/train.prototxt".format(job_dir)
+test_net_file = "{}/test.prototxt".format(job_dir)
+deploy_net_file = "{}/deploy.prototxt".format(job_dir)
+solver_file = "{}/solver.prototxt".format(job_dir)
 # snapshot prefix.
 snapshot_prefix = "{}/{}".format(snapshot_dir, model_name)
 # job script path.
@@ -385,7 +388,7 @@ check_if_exist(train_data)
 check_if_exist(test_data)
 check_if_exist(label_map_file)
 check_if_exist(pretrain_model)
-make_if_not_exist(save_dir)
+#make_if_not_exist(job_dir)
 make_if_not_exist(job_dir)
 make_if_not_exist(snapshot_dir)
 
@@ -416,7 +419,7 @@ net[name] = L.MultiBoxLoss(*mbox_layers, multibox_loss_param=multibox_loss_param
 with open(train_net_file, 'w') as f:
     print('name: "{}_train"'.format(model_name), file=f)
     print(net.to_proto(), file=f)
-shutil.copy(train_net_file, job_dir)
+#shutil.copy(train_net_file, job_dir)
 
 # Create test net.
 net = caffe.NetSpec()
@@ -459,7 +462,7 @@ net.detection_eval = L.DetectionEvaluate(net.detection_out, net.label,
 with open(test_net_file, 'w') as f:
     print('name: "{}_test"'.format(model_name), file=f)
     print(net.to_proto(), file=f)
-shutil.copy(test_net_file, job_dir)
+#shutil.copy(test_net_file, job_dir)
 
 # Create deploy net.
 # Remove the first and last layer from test net.
@@ -474,7 +477,7 @@ with open(deploy_net_file, 'w') as f:
     net_param.input_shape.extend([
         caffe_pb2.BlobShape(dim=[1, 3, resize_height, resize_width])])
     print(net_param, file=f)
-shutil.copy(deploy_net_file, job_dir)
+#shutil.copy(deploy_net_file, job_dir)
 
 # Create solver.
 solver = caffe_pb2.SolverParameter(
@@ -485,7 +488,7 @@ solver = caffe_pb2.SolverParameter(
 
 with open(solver_file, 'w') as f:
     print(solver, file=f)
-shutil.copy(solver_file, job_dir)
+#shutil.copy(solver_file, job_dir)
 
 max_iter = 0
 # Find most recent snapshot.
