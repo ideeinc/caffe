@@ -56,7 +56,7 @@ caffe_root = os.getcwd()
 parser = argparse.ArgumentParser(description='SSD for ResNet.')
 parser.add_argument('train_db', help='path to train db.')
 parser.add_argument('test_db', help='path to test db.')
-parser.add_argument('--job_root', default='/jobs', help='path to job root directory.')
+parser.add_argument('--job_root', type=str, default='/jobs', help='path to job root directory.')
 parser.add_argument('--num_classes', type=int, dest='num_classes', help='number of classes.')
 parser.add_argument('--name_size', type=str, dest='name_size', help='path to name size file.')
 parser.add_argument('--pretrained', type=str, dest='pretrained', help='trained model weights file.')
@@ -64,7 +64,7 @@ parser.add_argument('--label_map', type=str, dest='label_map', help='path to lab
 parser.add_argument('--gpus', type=str, dest='gpus', default='0', help='GPUs indexes')
 parser.add_argument('--num_test_image', type=int, dest='num_test_image', help='number of test images')
 parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, help='batch size')
-parser.add_argument('--snapshot', type=int, dest='snapshot', help='snapshot iteration')
+parser.add_argument('--snapshot', type=int, dest='snapshot', default=10000, help='snapshot iteration')
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
@@ -348,10 +348,10 @@ solver_param = {
     'snapshot_after_train': True,
     # Test parameters
     'test_iter': [test_iter],
-    'test_interval': 10000,
+    'test_interval': args.snapshot,
     'eval_type': "detection",
     'ap_version': "11point",
-    'test_initialization': False,
+    'test_initialization': True,
     }
 
 # parameters for generating detection output.
