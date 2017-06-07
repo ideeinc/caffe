@@ -86,6 +86,7 @@ parser.add_argument('--gpus', type=str, dest='gpus', default='0', help='GPUs ind
 parser.add_argument('--num_test_image', type=int, dest='num_test_image', help='number of test images')
 parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, help='batch size')
 parser.add_argument('--snapshot', type=int, dest='snapshot', default=10000, help='snapshot iteration')
+parser.add_argument('--mean_value', type=str, dest='mean_value', default='104,117,123', help='mean value')
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
@@ -192,7 +193,7 @@ batch_sampler = [
         ]
 train_transform_param = {
         'mirror': False,
-        'mean_value': [53, 73, 144],
+        'mean_value': map(int, args.mean_value.split(',')),
         'resize_param': {
                 'prob': 1,
                 'resize_mode': P.Resize.WARP,
@@ -228,7 +229,7 @@ train_transform_param = {
             }
         }
 test_transform_param = {
-        'mean_value': [53, 73, 144],
+        'mean_value': map(int, args.mean_value.split(',')),
         'resize_param': {
                 'prob': 1,
                 'resize_mode': P.Resize.WARP,
