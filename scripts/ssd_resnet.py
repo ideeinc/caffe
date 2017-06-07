@@ -171,7 +171,7 @@ batch_sampler = [
         ]
 train_transform_param = {
         'mirror': False,
-        'mean_value': [104, 117, 123],
+        'mean_value': [53, 73, 144],
         'resize_param': {
                 'prob': 1,
                 'resize_mode': P.Resize.WARP,
@@ -190,7 +190,7 @@ train_transform_param = {
             }
         }
 test_transform_param = {
-        'mean_value': [104, 117, 123],
+        'mean_value': [53, 73, 144],
         'resize_param': {
                 'prob': 1,
                 'resize_mode': P.Resize.WARP,
