@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# create_data.sh image-dir xml-dir out-dir
+# create_detectdata.sh image-dir xml-dir out-dir
 #
 
 absolute_path() {
@@ -26,10 +26,10 @@ create_label() {
   [ -z "$namelist" ] && return
 
   echo -e "item {\n  name: \"none_of_the_above\"\n  label: 0\n  display_name: \"background\"\n}" > ${LABELMAP}
-  local i=1
+  i=1
   for name in $namelist; do
     echo -e "item {\n  name: \"$name\"\n  label: ${i}\n  display_name: \"$name\"\n}" >> ${LABELMAP}
-    let i=$i+1
+    i=$(($i+1))
   done
 }
 
@@ -51,7 +51,6 @@ create_list() {
   rand_file=${FILELIST}.rand$$
   cat ${FILELIST} | perl -MList::Util=shuffle -e 'print shuffle(<STDIN>);' > ${rand_file}
   mv ${rand_file} ${FILELIST}
-  echo "filelist: ${FILELIST}"
 }
 
 
