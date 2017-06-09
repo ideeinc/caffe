@@ -11,6 +11,7 @@ import stat
 import subprocess
 import sys
 import argparse
+import re
 import time
 from datetime import datetime
 
@@ -76,14 +77,13 @@ caffe_root = os.getcwd()
 
 parser = argparse.ArgumentParser(description='SSD for ResNet.')
 parser.add_argument('train_db', help='path to train db.')
-parser.add_argument('test_db', help='path to test db.')
+parser.add_argument('val_db', help='path to validation db.')
 parser.add_argument('--job_root', type=str, default='/jobs', help='path to job root directory.')
-parser.add_argument('--num_classes', type=int, dest='num_classes', help='number of classes.')
 parser.add_argument('--name_size', type=str, dest='name_size', help='path to name size file.')
 parser.add_argument('--pretrained', type=str, dest='pretrained', help='trained model weights file.')
 parser.add_argument('--label_map', type=str, dest='label_map', help='path to label file.')
 parser.add_argument('--gpus', type=str, dest='gpus', default='0', help='GPUs indexes')
-parser.add_argument('--num_test_image', type=int, dest='num_test_image', help='number of test images')
+parser.add_argument('--val_image_list', type=str, dest='val_image_list', help='list of images for validation')
 parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, help='batch size')
 parser.add_argument('--snapshot', type=int, dest='snapshot', default=10000, help='snapshot iteration')
 parser.add_argument('--mean_value', type=str, dest='mean_value', default='104,117,123', help='mean value')
@@ -100,7 +100,7 @@ remove_old_models = False
 # The database file for training data. Created by data/VOC0712/create_data.sh
 train_data = args.train_db
 # The database file for testing data. Created by data/VOC0712/create_data.sh
-test_data = args.test_db
+test_data = args.val_db
 # Specify the batch sampler.
 resize_width = 300
 resize_height = 300
@@ -239,6 +239,16 @@ test_transform_param = {
                 },
         }
 
+#
+def grep(str, file):
+    ret = []
+    with open(file, 'r') as f:
+        rx = re.compile(str)
+        for line in f:
+            if rx.search(line):
+                ret.append(line)
+    return ret
+
 # If true, use batch norm for all newly added layers.
 # Currently only the non batch norm version has been tested.
 use_batchnorm = False
@@ -285,7 +295,7 @@ pretrain_model = args.pretrained
 label_map_file = args.label_map
 
 # MultiBoxLoss parameters.
-num_classes = args.num_classes
+num_classes = len(grep('label:', label_map_file))
 share_location = True
 background_label_id=0
 train_on_diff_gt = True
@@ -378,7 +388,7 @@ elif normalization_mode == P.Loss.FULL:
   base_lr *= 2000.
 
 # Evaluate on whole test set.
-num_test_image = args.num_test_image
+num_test_image = len(grep(r"\S+", args.val_image_list))
 test_batch_size = 8
 # Ideally test_batch_size should be divisible by num_test_image,
 # otherwise mAP will be slightly off the true value.
