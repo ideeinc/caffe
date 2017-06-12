@@ -30,11 +30,16 @@ absolute_filepath() {
 #
 FILELISTTXT=/tmp/.flist$$
 DETECTLIST=/tmp/.detected$$
+DEPLOYTXT=/tmp/.deploy.prototxt$$
+TMPDIR=/tmp/.testres$$/
+MEAN_VALUE="104,117,123"
 THRESHOLD=0.4
 
-while getopts "ht:" OPT; do
+while getopts "t:m:h" OPT; do
   case $OPT in
   t) THRESHOLD=$OPTARG
+     ;;
+  m) MEAN_VALUE=$OPTARG
      ;;
   h) usage_exit
      ;;
@@ -48,15 +53,27 @@ RESIMG=`basename $2`.png
 CAFFEMODEL=`absolute_filepath $1`
 MODELROOT=$(absolute_path `dirname $CAFFEMODEL`)
 
-trap 'rm -f $FILELISTTXT $DETECTLIST $RESIMG' 2 3 15 EXIT
+trap 'rm -f $FILELISTTXT $DETECTLIST $RESIMG $DEPLOYTXT; rm -rf $TMPDIR; exit' 2 3 15 EXIT
 
 if [ ! -f "$JPGFILE" -o ! -f "$CAFFEMODEL" ]; then
   usage_exit
 fi
 echo $JPGFILE > $FILELISTTXT
 
+mkdir -p $TMPDIR
+cp $MODELROOT/deploy.prototxt $DEPLOYTXT
+sed -i -e "s|output_directory:.*|output_directory: \"$TMPDIR\"|" $DEPLOYTXT
+sed -i -e "s|label_map_file:.*|label_map_file: \"$MODELROOT/labelmap.txt\"|" $DEPLOYTXT
+sed -i -e "s|name_size_file:.*|name_size_file: \"$MODELROOT/name_size.txt\"|" $DEPLOYTXT
+
 cd $CAFFE_ROOT
-./build/examples/ssd/ssd_detect --confidence_threshold=$THRESHOLD $MODELROOT/deploy.prototxt $CAFFEMODEL $FILELISTTXT 2>/dev/null | tee $DETECTLIST
+./build/examples/ssd/ssd_detect --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT >$DETECTLIST 2>/dev/null
+if [ "$?" != 0 ]; then
+  ./build/examples/ssd/ssd_detect --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT
+  exit
+fi
+
+cat $DETECTLIST
 if [ -z "`cat $DETECTLIST`" ]; then
   echo 'no detection'
   eog $JPGFILE
