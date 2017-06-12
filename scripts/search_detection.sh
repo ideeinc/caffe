@@ -4,7 +4,7 @@
 #
 
 usage_exit() {
-  echo "usage: $0 [-t threshold] caffemodel-path image-file" >&2
+  echo "usage: $0 [-t threshold] caffemodel-dir image-dir" >&2
   echo
   exit 1
 }
@@ -43,25 +43,24 @@ done
 shift $((OPTIND - 1))
 
 #
-JPGFILE=`absolute_filepath $2`
-RESIMG=`basename $2`.png
+IMGDIR=`absolute_path $2`
 CAFFEMODEL=`absolute_filepath $1`
 MODELROOT=$(absolute_path `dirname $CAFFEMODEL`)
 
 trap 'rm -f $FILELISTTXT $DETECTLIST $RESIMG' 2 3 15 EXIT
 
-if [ ! -f "$JPGFILE" -o ! -f "$CAFFEMODEL" ]; then
+if [ ! -d "$IMGDIR" -o ! -f "$CAFFEMODEL" ]; then
   usage_exit
 fi
-echo $JPGFILE > $FILELISTTXT
 
 cd $CAFFE_ROOT
-./build/examples/ssd/ssd_detect --confidence_threshold=$THRESHOLD $MODELROOT/deploy.prototxt $CAFFEMODEL $FILELISTTXT 2>/dev/null | tee $DETECTLIST
-if [ -z "`cat $DETECTLIST`" ]; then
-  echo 'no detection'
-  eog $JPGFILE
-  exit
-fi
 
-python ./examples/ssd/plot_detections.py $DETECTLIST / --save-dir .
-[ -f $RESIMG ] && eog $RESIMG
+for f in `ls $IMGDIR/*.jpg $IMGDIR/*.JPG $IMGDIR/*.jpeg $IMGDIR/*.JPEG 2>/dev/null`; do
+  echo $f > $FILELISTTXT
+  RESIMG=`basename $f`.png
+  ./build/examples/ssd/ssd_detect --confidence_threshold=$THRESHOLD $MODELROOT/deploy.prototxt $CAFFEMODEL $FILELISTTXT 2>/dev/null | tee $DETECTLIST
+  if [ -n "`cat $DETECTLIST`" ]; then
+    python ./examples/ssd/plot_detections.py $DETECTLIST / --save-dir .
+    eog $RESIMG
+  fi
+done
