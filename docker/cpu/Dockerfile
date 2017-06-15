@@ -28,7 +28,7 @@ ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 
 # FIXME: use ARG instead of ENV once DockerHub supports this
-ENV CLONE_TAG=idee
+ENV CLONE_TAG=ssd-idee
 
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
     pip install --upgrade pip && \

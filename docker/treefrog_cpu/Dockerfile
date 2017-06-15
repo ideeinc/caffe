@@ -1,4 +1,4 @@
-FROM ideeinc/caffe:cpu
+FROM ideeinc/caffe:ssd_cpu
 MAINTAINER AOYAMA Kazuharu <aoyama@ideeinc.co.jp>
 
 ENV LANG C.UTF-8
