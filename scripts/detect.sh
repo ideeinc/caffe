@@ -34,12 +34,15 @@ DEPLOYTXT=/tmp/.deploy.prototxt$$
 TMPDIR=/tmp/.testres$$/
 MEAN_VALUE="104,117,123"
 THRESHOLD=0.4
+FILETYPE=image
 
-while getopts "t:m:h" OPT; do
+while getopts "t:m:f:h" OPT; do
   case $OPT in
   t) THRESHOLD=$OPTARG
      ;;
   m) MEAN_VALUE=$OPTARG
+     ;;
+  f) FILETYPE=$OPTARG
      ;;
   h) usage_exit
      ;;
@@ -67,9 +70,9 @@ sed -i -e "s|label_map_file:.*|label_map_file: \"$MODELROOT/labelmap.txt\"|" $DE
 sed -i -e "s|name_size_file:.*|name_size_file: \"$MODELROOT/name_size.txt\"|" $DEPLOYTXT
 
 cd $CAFFE_ROOT
-./build/examples/ssd/ssd_detect --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT >$DETECTLIST 2>/dev/null
+./build/examples/ssd/ssd_detect --file_type=$FILETYPE --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT >$DETECTLIST 2>/dev/null
 if [ "$?" != 0 ]; then
-  ./build/examples/ssd/ssd_detect --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT
+  ./build/examples/ssd/ssd_detect --file_type=$FILETYPE --mean_value=$MEAN_VALUE --confidence_threshold=$THRESHOLD $DEPLOYTXT $CAFFEMODEL $FILELISTTXT
   exit
 fi
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# ./detect.sh model-root-path image-file
+# ./detect.sh [options] caffemodel-dir image-file
 #
 
 usage_exit() {
-  echo "usage: $0 [-t threshold] [-m mean_value] caffemodel-dir image-dir" >&2
+  echo "usage: $0 [-f video|image] [-t threshold] [-m mean_value] caffemodel-dir image-dir" >&2
   echo
   exit 1
 }
