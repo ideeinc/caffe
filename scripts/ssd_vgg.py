@@ -87,6 +87,7 @@ parser.add_argument('--val_image_list', type=str, dest='val_image_list', help='l
 parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, help='batch size')
 parser.add_argument('--snapshot', type=int, dest='snapshot', default=10000, help='snapshot iteration')
 parser.add_argument('--mean_value', type=str, dest='mean_value', default='104,117,123', help='mean value')
+parser.add_argument('--max_iter', type=int, dest='max_iter', default=120000, help='max iterations')
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
@@ -403,7 +404,7 @@ solver_param = {
     'gamma': 0.1,
     'momentum': 0.9,
     'iter_size': iter_size,
-    'max_iter': 120000,
+    'max_iter': args.max_iter,
     'snapshot': args.snapshot,
     'display': 10,
     'average_loss': 10,
