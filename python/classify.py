@@ -23,10 +23,10 @@ def main(argv):
         "input_file",
         help="Input image, directory, or npy."
     )
-    parser.add_argument(
-        "output_file",
-        help="Output npy filename."
-    )
+    #parser.add_argument(
+    #    "output_file",
+    #    help="Output npy filename."
+    #)
     # Optional arguments.
     parser.add_argument(
         "--model_def",
@@ -64,6 +64,12 @@ def main(argv):
              "(numpy array). Set to '' for no mean subtraction."
     )
     parser.add_argument(
+        "--mean_binary",
+        default='',
+        help="Data set image mean of [Channels x Height x Width] dimensions " +
+             "(binary proto)."
+    )
+    parser.add_argument(
         "--input_scale",
         type=float,
         help="Multiply input features by this scale to finish preprocessing."
@@ -86,6 +92,16 @@ def main(argv):
         help="Image file extension to take as input when a directory " +
              "is given as the input file."
     )
+    parser.add_argument(
+        "--labels",
+        default='',
+        help="Label file"
+    )
+    parser.add_argument(
+        "--output",
+        default='',
+        help="output file"
+    )
     args = parser.parse_args()
 
     image_dims = [int(s) for s in args.images_dim.split(',')]
@@ -93,6 +109,13 @@ def main(argv):
     mean, channel_swap = None, None
     if args.mean_file:
         mean = np.load(args.mean_file)
+
+    if args.mean_binary:
+        blob = caffe.proto.caffe_pb2.BlobProto()
+        data = open(args.mean_binary, 'rb').read()
+        blob.ParseFromString(data)
+        mean = np.array(caffe.io.blobproto_to_array(blob))[0]
+
     if args.channel_swap:
         channel_swap = [int(s) for s in args.channel_swap.split(',')]
 
@@ -129,9 +152,17 @@ def main(argv):
     predictions = classifier.predict(inputs, not args.center_only)
     print("Done in %.2f s." % (time.time() - start))
 
-    # Save
-    print("Saving results into %s" % args.output_file)
-    np.save(args.output_file, predictions)
+    if args.labels:
+        categories = np.loadtxt(args.labels, str, delimiter="\t")
+        top_k = 4
+        predict = zip(predictions[0].tolist(), categories)
+        predict.sort(cmp=lambda x, y: cmp(x[0], y[0]), reverse=True)
+        for rank, (score, name) in enumerate(predict[:top_k], start=1):
+            print('#%d | %s | %4.1f%%' % (rank, name, score * 100))
+    else:
+        # Save
+        print("Saving results into %s" % args.output)
+        np.save(args.output, predictions)
 
 
 if __name__ == '__main__':
