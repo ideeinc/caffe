@@ -84,3 +84,4 @@ echo "list file: $FILELIST"
 echo "out dir: $OUTDIR"
 echo
 python ${CAFFE_ROOT}/scripts/create_annoset.py --anno-type=$anno_type --label-map-file=${LABELMAP} --min-dim=$min_dim --max-dim=$max_dim --resize-width=$width --resize-height=$height --check-label $extra_cmd "$ROOTDIR" "$FILELIST" "$OUTDIR" "$example_dir"
+rm -rf $example_dir
