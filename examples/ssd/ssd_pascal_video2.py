@@ -81,6 +81,7 @@ def grep(str, file):
 # The directory which contains the caffe code.
 # We assume you are running the script at the CAFFE_ROOT.
 caffe_root = os.path.join(os.getcwd(), os.path.dirname(__file__), "../..")
+work_dir = os.getcwd()
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "video_file",
@@ -98,19 +99,33 @@ parser.add_argument(
 )
 parser.add_argument(
     "--mean_value",
-    type=str, default='104,117,123', help='mean value')
+    type=str, default='104,117,123', help='mean value'
+)
+parser.add_argument(
+    "--save_file",
+    default='',
+    help="path to label file."
+)
 parser.add_argument(
     "--scale",
-    type=float, default=1.0, help='scale the image size for display')
+    type=float, default=1.0, help='scale the image size for display'
+)
 parser.add_argument(
     "--threshold",
-    type=float, default=0.5, help='visualize threshold')
+    type=float, default=0.5, help='visualize threshold'
+)
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
 run_soon = True
 
 # The parameters for the video demo
+save_file = ''
+if len(args.save_file) > 0:
+  if os.path.isabs(args.save_file):
+    save_file = args.save_file
+  else:
+    save_file = os.path.join(work_dir, args.save_file)
 
 # Key parameters used in training
 # If true, use batch norm for all newly added layers.
@@ -185,6 +200,7 @@ det_out_param = {
     'code_type': code_type,
     'visualize': True,
     'visualize_threshold': visualize_threshold,
+    'save_file': save_file,
     }
 
 # The job name should be same as the name used in examples/ssd/ssd_pascal.py.

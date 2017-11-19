@@ -533,11 +533,12 @@ void Solver<Dtype>::TestDetection(const int test_net_id) {
       const vector<pair<float, int> >& label_false_pos =
           false_pos.find(label)->second;
       vector<float> prec, rec;
+      //LOG(INFO) << "label_true_pos count:" << label_true_pos.size() << " num_pos:" << label_num_pos << " label_false_pos:" << label_false_pos.size() << " ap_version:" << param_.ap_version();
       ComputeAP(label_true_pos, label_num_pos, label_false_pos,
                 param_.ap_version(), &prec, &rec, &(APs[label]));
       mAP += APs[label];
       if (param_.show_per_class_result()) {
-        LOG(INFO) << "class" << label << ": " << APs[label];
+        LOG(INFO) << "class" << label << "  AP:" << APs[label];
       }
     }
     mAP /= num_pos.size();
