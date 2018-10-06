@@ -88,6 +88,7 @@ parser.add_argument('--batch_size', type=int, dest='batch_size', default=32, hel
 parser.add_argument('--snapshot', type=int, dest='snapshot', default=10000, help='snapshot iteration')
 parser.add_argument('--mean_value', type=str, dest='mean_value', default='104,117,123', help='mean value')
 parser.add_argument('--max_iter', type=int, dest='max_iter', default=120000, help='max iterations')
+parser.add_argument('--weight_decay', type=float, dest='weight_decay', default=0.0005, help='weight decay')
 args = parser.parse_args()
 
 # Set true if you want to start training right after generating all files.
@@ -398,7 +399,7 @@ test_iter = int(math.ceil(float(num_test_image) / test_batch_size))
 solver_param = {
     # Train parameters
     'base_lr': base_lr,
-    'weight_decay': 0.0005,
+    'weight_decay': args.weight_decay,
     'lr_policy': "multistep",
     'stepvalue': [80000, 100000, 120000],
     'gamma': 0.1,
@@ -408,7 +409,7 @@ solver_param = {
     'snapshot': args.snapshot,
     'display': 10,
     'average_loss': 10,
-    'type': "SGD",
+    'type': "Adam",
     'solver_mode': solver_mode,
     'device_id': device_id,
     'debug_info': False,
