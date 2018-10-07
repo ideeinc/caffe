@@ -32,7 +32,7 @@ WORKDIR $CAFFE_ROOT
 ENV CLONE_TAG=ssd
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm -f get-pip.py
-RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j src.build NVCC_GENCODE="-gencode=arch=compute_60,code=sm_60" CUDA_HOME=/usr/local/cuda && cd .. && rm -rf nccl
+#RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j src.build NVCC_GENCODE="-gencode=arch=compute_60,code=sm_60" CUDA_HOME=/usr/local/cuda && cd .. && rm -rf nccl
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/weiliu89/caffe.git . && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd ..
 RUN sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
