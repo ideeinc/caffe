@@ -31,8 +31,8 @@ WORKDIR $CAFFE_ROOT
 # https://github.com/docker/hub-feedback/issues/460
 ENV CLONE_TAG=1.0
 
+RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm -f get-pip.py
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/BVLC/caffe.git . && \
-    pip install --upgrade pip && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl && \
     sed -i -e 's/20 21(20) 30 35 50 60 61/60 61/' cmake/Cuda.cmake && \
