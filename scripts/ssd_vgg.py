@@ -409,7 +409,7 @@ solver_param = {
     'snapshot': args.snapshot,
     'display': 10,
     'average_loss': 10,
-    'type': "Adam",
+    'type': "SGD",
     'solver_mode': solver_mode,
     'device_id': device_id,
     'debug_info': False,
