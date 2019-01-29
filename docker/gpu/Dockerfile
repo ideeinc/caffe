@@ -11,6 +11,8 @@ ENV PRETRAINED $CAFFE_ROOT/models/VGGNet/VGG_ILSVRC_16_layers_fc_reduced.caffemo
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
+        devscripts \
+        debhelper \
         cmake \
         git \
         wget \
@@ -41,7 +43,9 @@ ENV CLONE_TAG=ssd-idee
 #RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/weiliu89/caffe.git . && \
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd ..
-RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && make -j install && cd .. && rm -rf nccl
+RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && \
+    make -j CUDA8_GENCODE="-gencode=arch=compute_60,code=sm_60 -gencode=arch=compute_61,code=sm_61" install && \
+    cd .. && rm -rf nccl
 RUN sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
     mkdir build && cd build && \
     cmake -DUSE_CUDNN=1 .. && \
