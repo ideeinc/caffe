@@ -22,7 +22,7 @@ FILELIST=${ROOTDIR}/filelist.txt
 
 #
 create_label() {
-  namelist=`find $XMLDIR -type f | grep '\.xml$' | xargs grep '<name>' 2>/dev/null | awk '{print $2}' | sort | uniq | sed -e 's/<\/\?name>//g'`
+  namelist=`find $XMLDIR -type f | grep '\.xml$' | xargs grep '<name>' 2>/dev/null | awk '{print $2}' | sort | grep -v none_of_the_above | uniq | sed -e 's/<\/\?name>//g'`
   [ -z "$namelist" ] && return
 
   echo -e "item {\n  name: \"none_of_the_above\"\n  label: 0\n  display_name: \"background\"\n}" > ${LABELMAP}
