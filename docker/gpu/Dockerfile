@@ -28,10 +28,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libsnappy-dev \
         protobuf-compiler \
         python-dev \
-        python-numpy \
         python-pip \
         python-setuptools \
-        python-scipy && \
+        && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR $CAFFE_ROOT
@@ -44,7 +43,8 @@ ENV CLONE_TAG=ssd-idee
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
     cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd ..
 RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && \
-    make -j CUDA8_GENCODE="-gencode=arch=compute_60,code=sm_60 -gencode=arch=compute_61,code=sm_61" install && \
+    make -j"$(nproc)" CUDA8_GENCODE="-gencode=arch=compute_60,code=sm_60 -gencode=arch=compute_61,code=sm_61" && \
+    make install && \
     cd .. && rm -rf nccl
 RUN sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
     mkdir build && cd build && \
