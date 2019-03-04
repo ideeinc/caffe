@@ -21,6 +21,8 @@ RUN curl -sL https://github.com/NVIDIA/DIGITS/archive/v${DIGITS_PKG_VERSION}.tar
     mv DIGITS-${DIGITS_PKG_VERSION} digits
 
 WORKDIR /usr/share/digits
+COPY patch.diff .
+RUN patch -p1 < patch.diff
 RUN pip install -r requirements.txt && \
     pip install -e .
 
