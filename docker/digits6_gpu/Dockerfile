@@ -1,4 +1,4 @@
-FROM bvlc/caffe:gpu
+FROM ideeinc/caffe:gpu
 
 ENV DIGITS_PKG_VERSION 6.1.1
 LABEL com.nvidia.digits.version="6.0"
