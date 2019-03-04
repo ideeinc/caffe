@@ -1,4 +1,4 @@
-FROM ideeinc/caffe:gpu
+FROM ideeinc/caffe:ssd_gpu
 
 ENV DIGITS_PKG_VERSION 6.1.1
 LABEL com.nvidia.digits.version="6.0"
