@@ -27,31 +27,44 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libprotobuf-dev \
         libsnappy-dev \
         protobuf-compiler \
+        cython \
         python-dev \
-        python-pip \
         python-setuptools \
+        python-numpy \
+        python-scipy \
+        python-matplotlib \
+        python-skimage \
+        python-pil \
+        python-pydot \
+        python-wheel \
+        python-pandas \
+        python-gflags \
+        python-h5py \
+        python-protobuf \
+        python-nose \
+        python-leveldb \
+        python-lmdb \
+        python-yaml \
+        python-dateutil \
         && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR $CAFFE_ROOT
 
-# FIXME: use ARG instead of ENV once DockerHub supports this
-# https://github.com/docker/hub-feedback/issues/460
 ENV CLONE_TAG=ssd-idee
 
-#RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/weiliu89/caffe.git . && \
-RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
-    cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd ..
 RUN git clone https://github.com/NVIDIA/nccl.git && cd nccl && \
     make -j"$(nproc)" CUDA8_GENCODE="-gencode=arch=compute_60,code=sm_60 -gencode=arch=compute_61,code=sm_61" && \
-    make install && \
-    cd .. && rm -rf nccl
-RUN sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
+    make install && cd .. && rm -rf nccl
+
+WORKDIR $CAFFE_ROOT
+RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
+    sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
     mkdir build && cd build && \
     cmake -DUSE_CUDNN=1 .. && \
     make pycaffe -j"$(nproc)" && \
     make -j"$(nproc)" && \
-    cd ..
+    make install
 
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
 ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
