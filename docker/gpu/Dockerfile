@@ -1,6 +1,7 @@
 FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
 LABEL maintainer caffe-maint@googlegroups.com
 
+ENV LANG C.UTF-8
 ENV CAFFE_ROOT /opt/caffe
 ENV MAX_ITER 200000
 ENV SNAPSHOT 20000
@@ -10,6 +11,7 @@ ENV GPUS 0,1
 ENV PRETRAINED $CAFFE_ROOT/models/VGGNet/VGG_ILSVRC_16_layers_fc_reduced.caffemodel
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
         build-essential \
         devscripts \
         debhelper \
@@ -27,6 +29,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libprotobuf-dev \
         libsnappy-dev \
         protobuf-compiler \
+        && \
+    apt-get install -y \
         cython \
         python-dev \
         python-setuptools \
@@ -61,7 +65,7 @@ WORKDIR $CAFFE_ROOT
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
     sed -i -e 's/set(Caffe_known_gpu_archs .*/set(Caffe_known_gpu_archs "60 61")/' cmake/Cuda.cmake && \
     mkdir build && cd build && \
-    cmake -DUSE_CUDNN=1 .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DUSE_CUDNN=1 .. && \
     make pycaffe -j"$(nproc)" && \
     make -j"$(nproc)" && \
     make install

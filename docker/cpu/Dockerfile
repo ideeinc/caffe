@@ -1,8 +1,14 @@
 FROM ubuntu:16.04
 LABEL maintainer caffe-maint@googlegroups.com
 
+ENV LANG C.UTF-8
+ENV CAFFE_ROOT /opt/caffe
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
         build-essential \
+        devscripts \
+        debhelper \
         cmake \
         git \
         wget \
@@ -17,38 +23,49 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libprotobuf-dev \
         libsnappy-dev \
         protobuf-compiler \
+        && \
+    apt-get install -y \
+        cython \
         python-dev \
-        python-numpy \
-        python-pip \
         python-setuptools \
-        python-scipy && \
+        python-numpy \
+        python-scipy \
+        python-matplotlib \
+        python-skimage \
+        python-pil \
+        python-pydot \
+        python-wheel \
+        python-pandas \
+        python-gflags \
+        python-h5py \
+        python-protobuf \
+        python-nose \
+        python-leveldb \
+        python-lmdb \
+        python-yaml \
+        python-dateutil \
+        && \
     rm -rf /var/lib/apt/lists/*
 
-ENV CAFFE_ROOT=/opt/caffe
 WORKDIR $CAFFE_ROOT
 
-# FIXME: use ARG instead of ENV once DockerHub supports this
 ENV CLONE_TAG=ssd-idee
 
-RUN wget https://bootstrap.pypa.io/get-pip.py && python get-pip.py && rm -f get-pip.py
 RUN git clone -b ${CLONE_TAG} --depth 1 https://github.com/ideeinc/caffe.git . && \
-    cd python && for req in $(cat requirements.txt) pydot; do pip install $req; done && cd .. && \
     mkdir build && cd build && \
-    cmake -DCPU_ONLY=1 -DUSE_CUDNN=0 .. && \
-    make -j"$(nproc)"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCPU_ONLY=1 .. && \
+    make pycaffe -j"$(nproc)" && \
+    make -j"$(nproc)" && \
+    make install
 
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
 ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
 ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:$PATH
 RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
 
-#WORKDIR ${CAFFE_ROOT}/data/mnist
-#RUN ./get_mnist.sh
-#WORKDIR ${CAFFE_ROOT}/data/cifar10
-#RUN ./get_cifar10.sh
-#WORKDIR ${CAFFE_ROOT}/data/ilsvrc12
-#RUN ./get_ilsvrc_aux.sh
-#ADD http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel ${CAFFE_ROOT}/models/bvlc_reference_caffenet
-#ADD http://dl.caffe.berkeleyvision.org/bvlc_googlenet.caffemodel ${CAFFE_ROOT}/models/bvlc_googlenet
+#RUN mkdir -p `dirname $PRETRAINED`
+#RUN wget -q -O $PRETRAINED http://cs.unc.edu/~wliu/projects/ParseNet/VGG_ILSVRC_16_layers_fc_reduced.caffemodel
 
+WORKDIR /jobs
 WORKDIR /workspace
+VOLUME  ["/workspace", "/jobs"]

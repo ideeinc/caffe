@@ -1,5 +1,5 @@
 FROM ideeinc/caffe:ssd_gpu
-MAINTAINER AOYAMA Kazuharu <aoyama@ai-ms.com>
+MAINTAINER AOYAMA Kazuharu <aoyama@ideeinc.co.jp>
 
 ENV LANG C.UTF-8
 
@@ -37,4 +37,3 @@ RUN mkdir -p /usr/src/treefrog && \
     rm -rf /usr/src/treefrog
 
 CMD ["treefrog", "-v"]
-
