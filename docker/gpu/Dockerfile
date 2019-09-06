@@ -1,7 +1,8 @@
-FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu16.04
+FROM nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04
 LABEL maintainer caffe-maint@googlegroups.com
 
 ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 ENV CAFFE_ROOT /opt/caffe
 ENV MAX_ITER 200000
 ENV SNAPSHOT 20000

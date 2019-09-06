@@ -1,7 +1,8 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 LABEL maintainer caffe-maint@googlegroups.com
 
 ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 ENV CAFFE_ROOT /opt/caffe
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
